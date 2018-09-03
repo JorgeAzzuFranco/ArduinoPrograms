@@ -68,9 +68,8 @@ int matriz[frames][dpi][dpi] =
 void loop() {
 
   limpiar();
-  delay(500);
 
-  for (int frame = 0; frame < dpi; frame++) {
+  for (int frame = 0; frame < frames; frame++) {
 
     for (int repeat = 0; repeat < 600; repeat++) {
 
