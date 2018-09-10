@@ -93,4 +93,3 @@ void limpiar() {
     digitalWrite(i, HIGH);
   }
 }
-
