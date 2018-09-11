@@ -1,3 +1,8 @@
+//Jorge Azzulito Franco
+//Juego de la hormiga come cesped con velocidad variada
+//Pines (matriz) anodos 0-5, (matriz) catodos 6-11, (boton) 13
+
+
 const int boton = 13;
 
 void setup() {
