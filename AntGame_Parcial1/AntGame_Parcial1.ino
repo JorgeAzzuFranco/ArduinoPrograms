@@ -8,12 +8,17 @@ void setup() {
 
   pinMode(boton, INPUT);
 
+
 }
 
 //Variables
 const int dpi = 6; //densidad de pantalla
 int posX;
 int posY;
+int positionX;
+int positionY;
+int PosicionX=0;
+int PosicionY=0;
 int contador = 0;
 int lectura = 0;
 
@@ -28,34 +33,69 @@ int matriz[dpi][dpi] =
   {1, 1, 1, 1, 1, 1}  //fila 5
 };
 
-int matVirt[dpi][dpi] =
-  //Matriz virtual
-{ //Columna
-  {0, 0, 0, 0, 0, 0}, //fila 0
-  {0, 0, 0, 0, 0, 0}, //fila 1
-  {0, 0, 0, 0, 0, 0}, //fila 2
-  {0, 0, 0, 0, 0, 0}, //fila 3
-  {0, 0, 0, 0, 0, 0}, //fila 4
-  {0, 0, 0, 0, 0, 0}  //fila 5
-};
-
 int ganador[dpi][dpi] =
-  { //Columna
-    {0, 1, 1, 1, 1, 0}, //fila 0
-    {0, 1, 1, 1, 1, 0}, //fila 1
-    {0, 0, 1, 1, 0, 0}, //fila 2
-    {0, 0, 1, 1, 0, 0}, //fila 3
-    {0, 0, 1, 1, 0, 0}, //fila 4
-    {0, 1, 0, 0, 1, 0}  //fila 5
-  };
+{ //Columna
+  {0, 1, 1, 1, 1, 0}, //fila 0
+  {0, 1, 1, 1, 1, 0}, //fila 1
+  {0, 0, 1, 1, 0, 0}, //fila 2
+  {0, 0, 1, 1, 0, 0}, //fila 3
+  {0, 0, 1, 1, 0, 0}, //fila 4
+  {0, 1, 0, 0, 1, 0}  //fila 5
+};
 
 void loop() {
 
   botonReinicio();
   validarGanador();
 
-  posX = map(analogRead(A1), 0, 1023, 0, 5);
-  posY = map(analogRead(A0), 0, 1023, 0, 5);
+  positionX = map(analogRead(A1), 0, 1023, 0, 5);
+  positionY = map(analogRead(A0), 0, 1023, 0, 5);
+
+  //Joystick
+  if (positionX == 0) //Rápido X izquierda
+  {
+    PosicionX = PosicionX - 5;
+    PosicionX = constrain(PosicionX, 0, 50); //En el físico usar 5000
+  }
+  if (positionX == 1) //Lento X izquierda
+  {
+    PosicionX = PosicionX - 1;
+    PosicionX = constrain(PosicionX, 0, 50);
+  }
+  if (positionX == 3) //Lento X derecha
+  {
+    PosicionX = PosicionX + 1;
+    PosicionX = constrain(PosicionX, 0, 50);
+  }
+  if (positionX == 4) //Rápido X derecha
+  {
+    PosicionX = PosicionX + 5;
+    PosicionX = constrain(PosicionX, 0, 50);
+  }
+  if (positionY == 0) //Rápido Y izquierda
+  {
+    PosicionY = PosicionY - 5;
+    PosicionY = constrain(PosicionY, 0, 50);
+  }
+  if (positionY == 1) //Lento Y izquierda
+  {
+    PosicionY = PosicionY - 1;
+    PosicionY = constrain(PosicionY, 0, 50);
+  }
+  if (positionY == 3) //Lento Y derecha
+  {
+    PosicionY = PosicionY + 1;
+    PosicionY = constrain(PosicionY, 0, 50);
+  }
+  if (positionY == 4) //Rápido Y derecha
+  {
+    PosicionY = PosicionY + 5;
+    PosicionY = constrain(PosicionY, 0, 50);
+  }
+  //Fin Joystick
+
+  posX = PosicionX/10;
+  posY = PosicionY/10;
 
   if (matriz[posX][posY] == 0) {
     digitalWrite(posX, HIGH);
@@ -91,14 +131,14 @@ void botonReinicio() {
 
 }
 
-void validarGanador(){
+void validarGanador() {
   contador = 0;
   for (int i = 0; i < dpi; i++) { //Columnas
-      for (int j = 0; j < dpi; j++) { //Filas
-        if (matriz[i][j] == 0) {
-          contador++;
-        }
+    for (int j = 0; j < dpi; j++) { //Filas
+      if (matriz[i][j] == 0) {
+        contador++;
       }
+    }
   }
 
   if (contador > 35) {
@@ -106,9 +146,9 @@ void validarGanador(){
   }
 }
 
-void showGanador(){
+void showGanador() {
   int tiempo = 0;
-  while(tiempo < 1000){
+  while (tiempo < 1000) {
     for (int i = 0; i < dpi; i++) { //Columnas
       for (int j = 0; j < dpi; j++) { //Filas
         if (ganador[i][j] == 1) {
@@ -121,10 +161,16 @@ void showGanador(){
     tiempo++;
   }
   limpiarMatriz();
+  posX = 0;
+  posY = 0;
+  positionX = 0;
+  positionY = 0;
+  PosicionX = 0;
+  PosicionY = 0;  
 }
 
 void printMatriz() {
-  for (int repeticion = 0; repeticion < 50; repeticion++) {
+  for (int repeticion = 0; repeticion < 20; repeticion++) {
     for (int i = 0; i < dpi; i++) { //Columnas
       for (int j = 0; j < dpi; j++) { //Filas
         if (matriz[i][j] == 1) {
