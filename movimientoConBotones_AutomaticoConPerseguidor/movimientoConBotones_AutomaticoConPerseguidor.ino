@@ -19,32 +19,7 @@
 #define BU 11
 #define BA 13
 
-void setup() {
-  //Pines de ShiftReg
-  for(int i = 0; i < 3; i++){
-    pinMode(i, OUTPUT);
-  }
-
-  //Pines de Ground para niveles
-  for(int i = 3; i < 7; i++){
-    pinMode(i, OUTPUT);
-  }
-
-  //Poniendo en alto los niveles
-  for(int i = 3; i < 7; i++){
-    digitalWrite(i, HIGH);
-  }
-  
-  //Pines para botones
-  for(int i = 7; i < 13; i++){
-    pinMode(i, INPUT);
-  }
-
-  randomSeed(millis());
-}
-
-int cubo[2][4][4][4] = 
-{
+int cubo[2][4][4][4] = {
   {
     {
       {1,0,0,0},
@@ -130,6 +105,32 @@ int posRz = 600;
 int direccionR = 0;
 int tiempo = 0;
 
+void setup() {
+  //Pines de ShiftReg
+  for(int i = 0; i < 3; i++){
+    pinMode(i, OUTPUT);
+  }
+
+  //Pines de Ground para niveles
+  for(int i = 3; i < 7; i++){
+    pinMode(i, OUTPUT);
+  }
+
+  //Poniendo en alto los niveles
+  for(int i = 3; i < 7; i++){
+    digitalWrite(i, HIGH);
+  }
+  
+  //Pines para botones
+  for(int i = 7; i < 13; i++){
+    pinMode(i, INPUT);
+  }
+
+  randomSeed(millis());
+
+//  Serial.begin(9600);
+}
+
 void loop() {
 
   //Barrido Al Fin!!!!
@@ -162,7 +163,7 @@ void loop() {
   }
   
   mover();
-  generarMov();
+  //generarMov();
   moverRand();
 }
 
@@ -286,7 +287,6 @@ void limpiarCubo(int plano){
 }
 
 //Funciones para el led random
-
 void generarMov() {
   if (tiempo == 500) {
     
@@ -299,42 +299,51 @@ void generarMov() {
   }
 }
 
-void moverRand() {  
+void moverRand() {     
     
-    if (direccionR == 1) {
+    if (posY < posRy) {
       posRy--;
-      posRy = constrain(posRy, 0, 600);
+      posRy = constrain(posRy, 0, 900);
     }
   
-    if (direccionR == 2) {
+    if (posY > posRy) {
       posRy++;
-      posRy = constrain(posRy, 0, 600);
+      posRy = constrain(posRy, 0, 900);
     }
   
-    if (direccionR == 3) {
+    if (posX < posRx) {
       posRx--;
-      posRx = constrain(posRx, 0, 600);
+      posRx = constrain(posRx, 0, 900);
     }
   
-    if (direccionR == 4) {
+    if (posX > posRx) {
       posRx++;
-      posRx = constrain(posRx, 0, 600);
+      posRx = constrain(posRx, 0, 900);
     }
   
-    if (direccionR == 5) {
+    if (posZ < posRz) {
       posRz--;
-      posRz = constrain(posRz, 0, 600);
+      posRz = constrain(posRz, 0, 900);
     }
   
-    if (direccionR == 6) {
+    if (posZ > posRz) {
       posRz++;
-      posRz = constrain(posRz, 0, 600);
+      posRz = constrain(posRz, 0, 900);
     }
 
-    int Rx = posRx/200;
-    int Ry = posRy/200;
-    int Rz = posRz/200;
-  
+    int Rx = posRx/300;
+    int Ry = posRy/300;
+    int Rz = posRz/300;
+
+//    Serial.print('(');
+//    Serial.print(posRx);
+//    Serial.print(',');
+//    Serial.print(posRy);
+//    Serial.print(',');
+//    Serial.print(posRz);
+//    Serial.println(')');
+    
+    
   limpiarCubo(1);
   escribirCubo(1, Rx, Ry, Rz, 1);
 }
