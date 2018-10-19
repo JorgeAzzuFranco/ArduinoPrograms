@@ -17,30 +17,6 @@
 #define BU 11
 #define BA 13
 
-void setup() {
-  //Pines de ShiftReg
-  for(int i = 0; i < 3; i++){
-    pinMode(i, OUTPUT);
-  }
-
-  //Pines de Ground para niveles
-  for(int i = 3; i < 7; i++){
-    pinMode(i, OUTPUT);
-  }
-
-  //Poniendo en alto los niveles
-  for(int i = 3; i < 7; i++){
-    digitalWrite(i, HIGH);
-  }
-  
-  //Pines para botones
-  for(int i = 7; i < 13; i++){
-    pinMode(i, INPUT);
-  }
-
-  randomSeed(millis());
-}
-
 int cubo[2][4][4][4] = 
 {
   {
@@ -122,16 +98,43 @@ int vel = 600;
 int division = 200;
 
 //Variables para movimiento aleatorio
-int posRx = 600;
-int posRy = 600;
-int posRz = 600;
+int posRx = 600;//600
+int posRy = 600;//600
+int posRz = 600;//600
 int direccionR = 0;
+int timer = 0;
 int tiempo = 0;
 
-void loop() {
+void setup() {
+  //Pines de ShiftReg
+  for(int i = 0; i < 3; i++){
+    pinMode(i, OUTPUT);
+  }
 
+  //Pines de Ground para niveles
+  for(int i = 3; i < 7; i++){
+    pinMode(i, OUTPUT);
+  }
+
+  //Poniendo en alto los niveles
+  for(int i = 3; i < 7; i++){
+    digitalWrite(i, HIGH);
+  }
+  
+  //Pines para botones
+  for(int i = 7; i < 13; i++){
+    pinMode(i, INPUT);
+  }
+
+  randomSeed(millis());
+//  Serial.begin(9600);
+}
+
+void loop() {
+   
   //Barrido Al Fin!!!!
   for(int plan = 0; plan < 2; plan++){
+    
     for(int nivel = 3; nivel < 7; nivel++){
   
       //Pasando el cubo a arreglo
@@ -141,7 +144,7 @@ void loop() {
           contador++; 
         }
       }
-  
+
       contador = 0;
       
       //Pasando el arreglo a ShiftR
@@ -155,13 +158,16 @@ void loop() {
       digitalWrite(nivel, 0);
       limpiar();
       digitalWrite(nivel, 1);
-  
+      
     }
+    
+    mover();
+    generarMov();
+    moverRand();
+    colision();
+    
   }
-  
-  mover();
-  generarMov();
-  moverRand();
+
 }
 
 void shift(){
@@ -286,14 +292,14 @@ void limpiarCubo(int plano){
 //Funciones para el led random
 
 void generarMov() {
-  if (tiempo == 500) {
+  if (timer == 500) {
     
     direccionR = random(1, 7);
     
-    tiempo = 0;
+    timer = 0;
   }
   else {
-    tiempo++;
+    timer++;
   }
 }
 
@@ -336,3 +342,32 @@ void moverRand() {
   limpiarCubo(1);
   escribirCubo(1, Rx, Ry, Rz, 1);
 }
+
+void colision(){
+  
+  if(cubo[0][map(posZ,0,600,0,3)][map(posY,0,600,0,3)][map(posX,0,600,0,3)] == 1 
+     and cubo[1][map(posZ,0,600,0,3)][map(posY,0,600,0,3)][map(posX,0,600,0,3)] == 1){
+//    Serial.println("colisiona we"); Ya entrooooooo!! :3
+    if(tiempo < 500){ //Tiempo en el que tarda en reaccionar
+      direccion = 0;
+      direccionR = 0;
+      
+      escribirCubo(1,2,2,2,1);
+      
+      tiempo++;
+    }
+    else{
+      posX = 0;
+      posY = 0;
+      posZ = 0;
+      posRx = 600;
+      posRy = 600;
+      posRz = 600;
+      direccion = 0;
+      direccionR = 0;
+      tiempo = 0;
+      for(int i = 0; i < 500; i++){}
+    }
+  }
+}  
+
