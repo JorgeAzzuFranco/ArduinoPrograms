@@ -61,9 +61,9 @@ int arreglo[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int a = 0;
 
 //Variables para movimiento aleatorio
-int posX = random(0, 4);
-int posY = random(0, 4);
-int posZ = random(0, 4);
+int posX = 600;
+int posY = 600;
+int posZ = 600;
 int direccion = 0;
 int tiempo = 0;
 
@@ -95,10 +95,10 @@ void loop() {
     digitalWrite(nivel, HIGH);
 
   }
-
-  generarMov();
+  
   moverRand();
-
+  generarMov();
+  
 }
 
 void shift() {
@@ -122,8 +122,8 @@ void limpiar() {
 void generarMov() {
   if (tiempo == 500) {
     
-    direccion = random(0, 6);
-
+    direccion = random(1, 7);
+    
     tiempo = 0;
   }
   else {
@@ -135,32 +135,32 @@ void moverRand() {
     
     if (direccion == 1) {
       posY--;
-      posY = constrain(posY, 0, 800);
+      posY = constrain(posY, 0, 600);
     }
   
     if (direccion == 2) {
       posY++;
-      posY = constrain(posY, 0, 800);
+      posY = constrain(posY, 0, 600);
     }
   
     if (direccion == 3) {
       posX--;
-      posX = constrain(posX, 0, 800);
+      posX = constrain(posX, 0, 600);
     }
   
     if (direccion == 4) {
       posX++;
-      posX = constrain(posX, 0, 800);
+      posX = constrain(posX, 0, 600);
     }
   
     if (direccion == 5) {
       posZ--;
-      posZ = constrain(posZ, 0, 800);
+      posZ = constrain(posZ, 0, 600);
     }
   
     if (direccion == 6) {
       posZ++;
-      posZ = constrain(posZ, 0, 800);
+      posZ = constrain(posZ, 0, 600);
     }
 
     int x = posX/200;

@@ -41,30 +41,60 @@ void setup() {
   randomSeed(millis());
 }
 
-int cubo[4][4][4] = {
+int cubo[2][4][4][4] = 
+{
   {
-    {1,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0}
+    {
+      {1,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0}
+    },
+    {
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0}
+    },
+    {
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0}
+    },
+    {
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0}
+    }
   },
+  
   {
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0}
-  },
-  {
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0}
-  },
-  {
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0}
+    {
+      {1,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0}
+    },
+    {
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0}
+    },
+    {
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0}
+    },
+    {
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0},
+      {0,0,0,0}
+    }
   }
 };
 
@@ -91,38 +121,47 @@ int direccion = 0;
 int vel = 600;
 int division = 200;
 
-//Tiempo de random
-int timer = 0;
+//Variables para movimiento aleatorio
+int posRx = 600;
+int posRy = 600;
+int posRz = 600;
+int direccionR = 0;
+int tiempo = 0;
 
 void loop() {
 
   //Barrido Al Fin!!!!
-  for(int nivel = 3; nivel < 7; nivel++){
-
-    //Pasando el cubo a arreglo
-    for(int y = 0; y < 4; y++){
-      for(int x = 0; x < 4; x++){
-        arreglo[contador] = cubo[nivel-3][y][x];
-        contador++; 
+  for(int plan = 0; plan < 2; plan++){
+    for(int nivel = 3; nivel < 7; nivel++){
+  
+      //Pasando el cubo a arreglo
+      for(int y = 0; y < 4; y++){
+        for(int x = 0; x < 4; x++){
+          arreglo[contador] = cubo[plan][nivel-3][y][x];
+          contador++; 
+        }
       }
+  
+      contador = 0;
+      
+      //Pasando el arreglo a ShiftR
+      for(int i = 15; i >= 0; i--){
+        digitalWrite(ds, arreglo[i]);
+        shift();
+      }
+  
+      store();
+  
+      digitalWrite(nivel, 0);
+      limpiar();
+      digitalWrite(nivel, 1);
+  
     }
-
-    contador = 0;
-    
-    //Pasando el arreglo a ShiftR
-    for(int i = 15; i >= 0; i--){
-      digitalWrite(ds, arreglo[i]);
-      shift();
-    }
-
-    store();
-
-    digitalWrite(nivel, 0);
-    limpiar();
-    digitalWrite(nivel, 1);
-
   }
+  
   mover();
+  generarMov();
+  moverRand();
 }
 
 void shift(){
@@ -226,22 +265,74 @@ void mover(){
   int y = posY/division;
   int z = posZ/division;
 
-  limpiarCubo();
-  escribirCubo(x,y,z,1);
-
+  limpiarCubo(0);
+  escribirCubo(0,x,y,z,1);
 }
 
-void escribirCubo(int x, int y, int z, int valor){
-  cubo[z][y][x] = valor;
+void escribirCubo(int plano, int x, int y, int z, int valor){
+  cubo[plano][z][y][x] = valor;
 }
 
-void limpiarCubo(){
+void limpiarCubo(int plano){
   for(int z = 0; z < 4; z++){
     for(int y = 0; y < 4; y++){
       for(int x = 0; x < 4; x++){
-       cubo[z][y][x] = 0;
+       cubo[plano][z][y][x] = 0;
       }
     }
   }
 }
 
+//Funciones para el led random
+
+void generarMov() {
+  if (tiempo == 500) {
+    
+    direccionR = random(1, 7);
+    
+    tiempo = 0;
+  }
+  else {
+    tiempo++;
+  }
+}
+
+void moverRand() {  
+    
+    if (direccionR == 1) {
+      posRy--;
+      posRy = constrain(posRy, 0, 600);
+    }
+  
+    if (direccionR == 2) {
+      posRy++;
+      posRy = constrain(posRy, 0, 600);
+    }
+  
+    if (direccionR == 3) {
+      posRx--;
+      posRx = constrain(posRx, 0, 600);
+    }
+  
+    if (direccionR == 4) {
+      posRx++;
+      posRx = constrain(posRx, 0, 600);
+    }
+  
+    if (direccionR == 5) {
+      posRz--;
+      posRz = constrain(posRz, 0, 600);
+    }
+  
+    if (direccionR == 6) {
+      posRz++;
+      posRz = constrain(posRz, 0, 600);
+    }
+
+    int Rx = posRx/200;
+    int Ry = posRy/200;
+    int Rz = posRz/200;
+  
+  limpiarCubo(1);
+  escribirCubo(1, Rx, Ry, Rz, 1);
+}
