@@ -2,7 +2,9 @@
 //Cubo led con shift register. Utilización de un
 //control que mueve un led encendido adelante, 
 //atras, izquierda, derecha, arriba, abajo y un
-//boton de acción
+//boton de acción. Ademas se adiciona un led 
+//que enciende aleatoriamente y sigue una direccion
+//especifica
 //Pines 0-2 para shift register, 3-6 para GND 
 //de niveles y de 7-13 para los botones
 
@@ -17,8 +19,7 @@
 #define BU 11
 #define BA 13
 
-int cubo[2][4][4][4] = 
-{
+int cubo[2][4][4][4] = {
   {
     {
       {1,0,0,0},
@@ -94,15 +95,16 @@ int ba = 0;
 
 //Direccion
 int direccion = 0;
-int vel = 600;
-int division = 200;
+int vel = 300;
+int division = 100;
 
 //Variables para movimiento aleatorio
-int posRx = 600;//600
-int posRy = 600;//600
-int posRz = 600;//600
+int posRx = 900;
+int posRy = 900;
+int posRz = 900;
 int direccionR = 0;
-int timer = 0;
+int velR = 2400;
+int divR = 800;
 int tiempo = 0;
 
 void setup() {
@@ -131,10 +133,9 @@ void setup() {
 }
 
 void loop() {
-   
+
   //Barrido Al Fin!!!!
   for(int plan = 0; plan < 2; plan++){
-    
     for(int nivel = 3; nivel < 7; nivel++){
   
       //Pasando el cubo a arreglo
@@ -144,7 +145,7 @@ void loop() {
           contador++; 
         }
       }
-
+  
       contador = 0;
       
       //Pasando el arreglo a ShiftR
@@ -158,16 +159,15 @@ void loop() {
       digitalWrite(nivel, 0);
       limpiar();
       digitalWrite(nivel, 1);
-      
+  
     }
-    
-    mover();
-    generarMov();
-    moverRand();
-    colision();
-    
   }
-
+  
+  mover();
+  delay(10);
+  moverRand();
+  delay(10);
+  colision();
 }
 
 void shift(){
@@ -290,68 +290,56 @@ void limpiarCubo(int plano){
 }
 
 //Funciones para el led random
-
-void generarMov() {
-  if (timer == 500) {
+void moverRand() {     
     
-    direccionR = random(1, 7);
-    
-    timer = 0;
-  }
-  else {
-    timer++;
-  }
-}
-
-void moverRand() {  
-    
-    if (direccionR == 1) {
+    if (posY < map(posRy,0,velR,0,600)) {
       posRy--;
-      posRy = constrain(posRy, 0, 600);
+      posRy = constrain(posRy, 0, velR);
     }
   
-    if (direccionR == 2) {
+    if (posY > map(posRy,0,velR,0,600)) {
       posRy++;
-      posRy = constrain(posRy, 0, 600);
+      posRy = constrain(posRy, 0, velR);
     }
   
-    if (direccionR == 3) {
+    if (posX < map(posRx,0,velR,0,600)) {
       posRx--;
-      posRx = constrain(posRx, 0, 600);
+      posRx = constrain(posRx, 0, velR);
     }
   
-    if (direccionR == 4) {
+    if (posX > map(posRx,0,velR,0,600)) {
       posRx++;
-      posRx = constrain(posRx, 0, 600);
+      posRx = constrain(posRx, 0, velR);
     }
   
-    if (direccionR == 5) {
+    if (posZ < map(posRz,0,velR,0,600)) {
       posRz--;
-      posRz = constrain(posRz, 0, 600);
+      posRz = constrain(posRz, 0, velR);
     }
   
-    if (direccionR == 6) {
+    if (posZ > map(posRz,0,velR,0,600)) {
       posRz++;
-      posRz = constrain(posRz, 0, 600);
+      posRz = constrain(posRz, 0, velR);
     }
 
-    int Rx = posRx/200;
-    int Ry = posRy/200;
-    int Rz = posRz/200;
-  
+    int Rx = posRx/divR;
+    int Ry = posRy/divR;
+    int Rz = posRz/divR;    
+    
   limpiarCubo(1);
   escribirCubo(1, Rx, Ry, Rz, 1);
+  
 }
 
 void colision(){
   
   if(cubo[0][map(posZ,0,600,0,3)][map(posY,0,600,0,3)][map(posX,0,600,0,3)] == 1 
-     and cubo[1][map(posZ,0,600,0,3)][map(posY,0,600,0,3)][map(posX,0,600,0,3)] == 1){
+ and cubo[1][map(posZ,0,600,0,3)][map(posY,0,600,0,3)][map(posX,0,600,0,3)] == 1){
     
     if(tiempo < 500){ //Tiempo en el que tarda en reaccionar
       direccion = 0;
       direccionR = 0;
-      
+
       for(int i = -1; i < 2; i++){
         for(int j = -1; j < 2; j++){
           for(int k = -1; k < 2; k++){
@@ -363,10 +351,12 @@ void colision(){
           }
         }
       }
-            
+      
+      
       tiempo++;
     }
     else{
+//      Serial.println("Si entro we");
       posX = 0;
       posY = 0;
       posZ = 0;
@@ -376,8 +366,8 @@ void colision(){
       direccion = 0;
       direccionR = 0;
       tiempo = 0;
-      for(int i = 0; i < 500; i++){}
+      for(int i = 0; i < 1000; i++){}
     }
   }
-}  
+}
 
