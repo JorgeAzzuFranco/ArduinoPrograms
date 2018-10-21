@@ -103,6 +103,8 @@ int posRx = 600;
 int posRy = 600;
 int posRz = 600;
 int direccionR = 0;
+int velR = 1800;
+int divR = 600;
 int tiempo = 0;
 
 void setup() {
@@ -163,7 +165,6 @@ void loop() {
   }
   
   mover();
-  //generarMov();
   moverRand();
 }
 
@@ -287,53 +288,41 @@ void limpiarCubo(int plano){
 }
 
 //Funciones para el led random
-void generarMov() {
-  if (tiempo == 500) {
-    
-    direccionR = random(1, 7);
-    
-    tiempo = 0;
-  }
-  else {
-    tiempo++;
-  }
-}
-
 void moverRand() {     
     
-    if (posY < posRy) {
+    if (posY < map(posRy,0,velR,0,600)) {
       posRy--;
-      posRy = constrain(posRy, 0, 900);
+      posRy = constrain(posRy, 0, velR);
     }
   
-    if (posY > posRy) {
+    if (posY > map(posRy,0,velR,0,600)) {
       posRy++;
-      posRy = constrain(posRy, 0, 900);
+      posRy = constrain(posRy, 0, velR);
     }
   
-    if (posX < posRx) {
+    if (posX < map(posRx,0,velR,0,600)) {
       posRx--;
-      posRx = constrain(posRx, 0, 900);
+      posRx = constrain(posRx, 0, velR);
     }
   
-    if (posX > posRx) {
+    if (posX > map(posRx,0,velR,0,600)) {
       posRx++;
-      posRx = constrain(posRx, 0, 900);
+      posRx = constrain(posRx, 0, velR);
     }
   
-    if (posZ < posRz) {
+    if (posZ < map(posRz,0,velR,0,600)) {
       posRz--;
-      posRz = constrain(posRz, 0, 900);
+      posRz = constrain(posRz, 0, velR);
     }
   
-    if (posZ > posRz) {
+    if (posZ > map(posRz,0,velR,0,600)) {
       posRz++;
-      posRz = constrain(posRz, 0, 900);
+      posRz = constrain(posRz, 0, velR);
     }
 
-    int Rx = posRx/300;
-    int Ry = posRy/300;
-    int Rz = posRz/300;
+    int Rx = posRx/divR;
+    int Ry = posRy/divR;
+    int Rz = posRz/divR;
 
 //    Serial.print('(');
 //    Serial.print(posRx);
