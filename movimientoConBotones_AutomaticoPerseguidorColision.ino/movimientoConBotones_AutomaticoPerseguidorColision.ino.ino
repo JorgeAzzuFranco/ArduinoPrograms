@@ -95,16 +95,16 @@ int ba = 0;
 
 //Direccion
 int direccion = 0;
-int vel = 300;
-int division = 100;
+int vel = 600;
+int division = 200;
 
 //Variables para movimiento aleatorio
-int posRx = 900;
-int posRy = 900;
-int posRz = 900;
+int posRx = 600;
+int posRy = 600;
+int posRz = 600;
 int direccionR = 0;
-int velR = 2400;
-int divR = 800;
+int velR = 1800;
+int divR = 600;
 int tiempo = 0;
 
 void setup() {
@@ -129,7 +129,6 @@ void setup() {
   }
 
   randomSeed(millis());
-//  Serial.begin(9600);
 }
 
 void loop() {
@@ -164,9 +163,7 @@ void loop() {
   }
   
   mover();
-  delay(10);
   moverRand();
-  delay(10);
   colision();
 }
 
@@ -290,7 +287,7 @@ void limpiarCubo(int plano){
 }
 
 //Funciones para el led random
-void moverRand() {     
+void moverRand() {
     
     if (posY < map(posRy,0,velR,0,600)) {
       posRy--;
@@ -324,22 +321,19 @@ void moverRand() {
 
     int Rx = posRx/divR;
     int Ry = posRy/divR;
-    int Rz = posRz/divR;    
-    
-  limpiarCubo(1);
-  escribirCubo(1, Rx, Ry, Rz, 1);
-  
+    int Rz = posRz/divR;
+
+    limpiarCubo(1);
+    escribirCubo(1, Rx, Ry, Rz, 1);
 }
 
 void colision(){
   
   if(cubo[0][map(posZ,0,600,0,3)][map(posY,0,600,0,3)][map(posX,0,600,0,3)] == 1 
- and cubo[1][map(posZ,0,600,0,3)][map(posY,0,600,0,3)][map(posX,0,600,0,3)] == 1){
+     and cubo[1][map(posZ,0,600,0,3)][map(posY,0,600,0,3)][map(posX,0,600,0,3)] == 1){
     
-    if(tiempo < 500){ //Tiempo en el que tarda en reaccionar
+    if(tiempo < 50){ //Tiempo en el que tarda en reaccionar
       direccion = 0;
-      direccionR = 0;
-
       for(int i = -1; i < 2; i++){
         for(int j = -1; j < 2; j++){
           for(int k = -1; k < 2; k++){
@@ -351,23 +345,17 @@ void colision(){
           }
         }
       }
-      
-      
+            
       tiempo++;
     }
     else{
-//      Serial.println("Si entro we");
       posX = 0;
       posY = 0;
       posZ = 0;
-      posRx = 600;
-      posRy = 600;
-      posRz = 600;
-      direccion = 0;
-      direccionR = 0;
+      posRx = 1800;
+      posRy = 1800;
+      posRz = 1800;
       tiempo = 0;
-      for(int i = 0; i < 1000; i++){}
     }
   }
-}
-
+} 
