@@ -430,8 +430,7 @@ void colision() {
       tiempo = 0;
     }
   }
-
-  }
+}
 
 void escribirBombas(int x, int y, int z){
 

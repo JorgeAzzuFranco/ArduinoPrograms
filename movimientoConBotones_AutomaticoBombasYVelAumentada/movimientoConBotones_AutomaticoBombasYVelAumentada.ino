@@ -436,7 +436,7 @@ void colision() {
     }
   }
 
-  }
+}
 
 void escribirBombas(int x, int y, int z){
 
